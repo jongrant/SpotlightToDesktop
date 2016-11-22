@@ -4,10 +4,7 @@
 
 /Main/bin
 /Main/obj
-/Silent/bin
-/Silent/obj
-/Package
-/.vs/SpotlightToDesktop/v14
+/Shared/bin
+/Shared/obj
+/.vs
 /packages
-/Shared/bin/Debug
-/Shared/obj/Debug
