@@ -16,6 +16,12 @@ namespace SpotlightToDesktop
             set;
         }
 
+        public string Key
+        {
+            get;
+            set;
+        }
+
         public FileType Format
         {
             get;

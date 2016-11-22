@@ -51,7 +51,7 @@ namespace SpotlightToDesktop
             if (file.Length < 8) return null;
 
             // prepare a result object
-            var result = new ImageInfo { FileName = file };
+            var result = new ImageInfo { FileName = Path.GetFullPath(file), Key = Path.GetFileName(file) };
 
             using (var image = Image.FromFile(file))
             {
