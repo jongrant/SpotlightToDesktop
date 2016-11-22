@@ -1,60 +1,62 @@
-﻿using Microsoft.Win32.TaskScheduler;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using Microsoft.Win32;
+using Microsoft.Win32.TaskScheduler;
 
 namespace SpotlightToDesktop.Main
 {
     static class Program
     {
         enum Mode {
-            Install,
-            List,
+            InstallScheduledTask,
+            InstallContextMenu,
             Change,
-            Help,
             Unknown
         }
 
         static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
             var mode = ParseArgs(args);
 
             if (mode == Mode.Unknown)
             {
-                Console.Error.WriteLine("Unrecognised command line argument.");
-            }
-
-            if (mode == Mode.Help || mode == Mode.Unknown)
-            {
-                var exeName = Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
-                Console.WriteLine($"Usage: {exeName} ( -install | -list | -change )");
+                MessageBox.Show("Unrecognised command line argument.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (mode == Mode.Install)
+            if (mode == Mode.InstallScheduledTask)
             {
                 InstallScheduledTask();
 
+                MessageBox.Show("Scheduled task has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 return;
             }
 
-            // get the list of possible wallpapers in the spotlight folder
-            List<ImageInfo> candidates = Inspector.GetWallpaperCandidates();
+            if (mode == Mode.InstallContextMenu)
+            {
+                InstallContextMenu();
 
-            if (mode == Mode.List)
-            {
-                foreach (var image in candidates)
-                {
-                    Console.WriteLine($"{Path.GetFileName(image.FileName)}: Type = {image.Format}, Size = {image.Dimensions.Width} x {image.Dimensions.Height}");
-                }
+                MessageBox.Show("Desktop context menu item has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                return;
             }
-            else if (mode == Mode.Change)
+
+            if (mode == Mode.Change)
             {
+                // get the list of possible wallpapers in the spotlight folder
+                List<ImageInfo> candidates = Inspector.GetWallpaperCandidates();
+
                 // now pick one at random
                 var picker = new Random();
                 var index = picker.Next(candidates.Count);
@@ -71,17 +73,28 @@ namespace SpotlightToDesktop.Main
             {
                 var arg = args[0].ToLowerInvariant();
 
-                if ("-install".StartsWith(arg)) return Mode.Install;
-                else if ("-list".StartsWith(arg)) return Mode.List;
+                if ("-install".StartsWith(arg)) return Mode.Unknown;
+                else if ("-installscheduledtask".StartsWith(arg)) return Mode.InstallScheduledTask;
+                else if ("-installcontextmenu".StartsWith(arg)) return Mode.InstallContextMenu;
                 else if ("-change".StartsWith(arg)) return Mode.Change;
-                else if ("-help".StartsWith(arg)) return Mode.Help;
-                else if ("-?".StartsWith(arg)) return Mode.Help;
                 else return Mode.Unknown;
             }
             else
             {
                 return Mode.Change;
             }
+        }
+
+        private static void InstallContextMenu()
+        {
+            RegistryKey key = Registry.ClassesRoot.CreateSubKey(@"DesktopBackground\Shell\RotateWallpaper", true);
+            key.SetValue(String.Empty, "Switch Wallpaper");
+            key.SetValue("HideInSafeMode", String.Empty);
+            key.SetValue("Position", "Bottom");
+            key.SetValue("Icon", $"{Application.ExecutablePath},0");
+
+            var subkey = key.CreateSubKey("command", true);
+            subkey.SetValue(String.Empty, $"{Application.ExecutablePath}");
         }
 
         private static void InstallScheduledTask()
