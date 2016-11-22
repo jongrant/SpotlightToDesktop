@@ -94,7 +94,7 @@ namespace SpotlightToDesktop.Main
             key.SetValue("Icon", $"{Application.ExecutablePath},0");
 
             var subkey = key.CreateSubKey("command", true);
-            subkey.SetValue(String.Empty, $"{Application.ExecutablePath}");
+            subkey.SetValue(String.Empty, $"{Application.ExecutablePath} -change");
         }
 
         private static void InstallScheduledTask()
@@ -119,18 +119,10 @@ namespace SpotlightToDesktop.Main
                     trigger.StartBoundary = DateTime.Today;
                     td.Triggers.Add(trigger);
 
-                    // Create an action that will launch Notepad whenever the trigger fires
-                    if (File.Exists("SpotlightToDesktopSilent.exe"))
-                    {
-                        var action = new ExecAction(Path.GetFullPath("SpotlightToDesktopSilent.exe"));
-                        td.Actions.Add(action);
-                    }
-                    else
-                    {
-                        var action = new ExecAction(Assembly.GetExecutingAssembly().Location, "-change");
-                        td.Actions.Add(action);
-                    }
-
+                    // Create an action that will launch our executable whenever the trigger fires
+                    var action = new ExecAction(Assembly.GetExecutingAssembly().Location, "-change");
+                    td.Actions.Add(action);
+                    
                     // Register the task in the root folder
                     ts.RootFolder.RegisterTaskDefinition(@"Spotlight To Desktop", td, TaskCreation.CreateOrUpdate, Environment.UserName, null, TaskLogonType.InteractiveToken);
                 }
