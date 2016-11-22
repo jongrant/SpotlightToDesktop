@@ -18,7 +18,13 @@ namespace SpotlightToDesktop
         {
             var candidates = new List<ImageInfo>();
 
-            DirectoryInfo dir = new DirectoryInfo(Environment.ExpandEnvironmentVariables(SpotlightPath));
+            string path = Environment.ExpandEnvironmentVariables(SpotlightPath);
+            if (!Directory.Exists(path))
+            {
+                throw new Exception("Windows Spotlight image cache folder does not exist!");
+            }
+
+            DirectoryInfo dir = new DirectoryInfo(path);
             var files = dir.GetFiles();
 
             foreach (var file in files)

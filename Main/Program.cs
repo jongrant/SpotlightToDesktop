@@ -36,34 +36,63 @@ namespace SpotlightToDesktop.Main
 
             if (mode == Mode.InstallScheduledTask)
             {
-                InstallScheduledTask();
+                try
+                {
+                    InstallScheduledTask();
 
-                MessageBox.Show("Scheduled task has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Scheduled task has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                catch (Exception e)
+                {
+                    MessageBox.Show($"There was a problem installing the scheduled task: {e.Message}", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 return;
             }
 
             if (mode == Mode.InstallContextMenu)
             {
-                InstallContextMenu();
+                try
+                {
+                    InstallContextMenu();
 
-                MessageBox.Show("Desktop context menu item has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Desktop context menu item has been installed successfully.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"There was a problem installing the context menu item: {e.Message}", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 return;
             }
 
             if (mode == Mode.Change)
             {
-                // get the list of possible wallpapers in the spotlight folder
-                List<ImageInfo> candidates = Inspector.GetWallpaperCandidates();
+                try
+                {
+                    // get the list of possible wallpapers in the spotlight folder
+                    var candidates = Inspector.GetWallpaperCandidates();
 
-                // now pick one at random
-                var picker = new Random();
-                var index = picker.Next(candidates.Count);
-                var selected = candidates[index];
+                    if (candidates.Count == 0)
+                    {
+                        MessageBox.Show($"There are no potential wallpaper candidates.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                // update the wallpaper
-                Wallpaper.Set(selected.FileName, Wallpaper.Style.Stretched);
+                        return;
+                    }
+
+                    // now pick one at random
+                    var picker = new Random();
+                    var index = picker.Next(candidates.Count);
+                    var selected = candidates[index];
+
+                    // update the wallpaper
+                    Wallpaper.Set(selected.FileName, Wallpaper.Style.Stretched);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"There was a problem changing the wallpaper: {e.Message}", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
