@@ -19,12 +19,12 @@ namespace SpotlightToDesktop
 
         private void OnInstallContextMenu(object sender, EventArgs e)
         {
-            Program.PerformInstallContextMenu();
+            Program.ExecuteAsAdmin("-installcontextmenu");
         }
 
         private void OnInstallScheduledTask(object sender, EventArgs e)
         {
-            Program.PerformInstallScheduledTask();
+            Program.ExecuteAsAdmin("-installscheduledtask");
         }
     }
 }

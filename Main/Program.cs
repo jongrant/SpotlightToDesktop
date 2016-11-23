@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -141,6 +142,16 @@ namespace SpotlightToDesktop
                 Diagnostics.Log(e);
                 Alert.Error($"There was a problem installing the scheduled task: {e.Message}");
             }
+        }
+
+        public static void ExecuteAsAdmin(string args)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = Application.ExecutablePath;
+            proc.StartInfo.Arguments = args;
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.Verb = "runas";
+            proc.Start();
         }
     }
 }
