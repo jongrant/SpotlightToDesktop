@@ -79,7 +79,7 @@ namespace SpotlightToDesktop
             try
             {
                 // get the list of possible wallpapers in the spotlight folder
-                var candidates = Inspector.GetWallpaperCandidates();
+                var candidates = Downloader.GetWallpaperCandidates();
 
                 // get the last one we picked 
                 var last = Settings.LastSelected;

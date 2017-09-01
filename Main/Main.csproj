@@ -52,7 +52,11 @@
     <Reference Include="Microsoft.Win32.TaskScheduler">
       <HintPath>..\Libs\Microsoft.Win32.TaskScheduler.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows" />
@@ -73,6 +77,7 @@
     </Compile>
     <Compile Include="Alert.cs" />
     <Compile Include="Diagnostics.cs" />
+    <Compile Include="Downloader.cs" />
     <Compile Include="ImageInfo.cs" />
     <Compile Include="Inspector.cs" />
     <Compile Include="Installer.cs" />
@@ -89,6 +94,7 @@
   <ItemGroup>
     <Content Include="AppIcon.ico" />
     <Content Include="ILMergeOrder.txt" />
+    <None Include="App.config" />
     <None Include="App.manifest">
       <SubType>Designer</SubType>
     </None>

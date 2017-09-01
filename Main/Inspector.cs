@@ -36,7 +36,7 @@ namespace SpotlightToDesktop
                 var info = Inspector.Inspect(Path.Combine(file.DirectoryName, file.Name));
 
                 // ignore any that are not landscape
-                if (info.Orientation != Orientation.Landscape) continue;
+                if (info == null || info.Orientation != Orientation.Landscape) continue;
 
                 // seems good, save it
                 candidates.Add(info);
@@ -56,6 +56,8 @@ namespace SpotlightToDesktop
             using (var image = Image.FromFile(file))
             {
                 result.Dimensions = image.Size;
+
+                if (image.Width < 640 || image.Height < 480) return null;
 
                 if (image.Width < image.Height) result.Orientation = Orientation.Portrait;
                 else result.Orientation = Orientation.Landscape;

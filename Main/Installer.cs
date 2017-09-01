@@ -15,7 +15,7 @@ namespace SpotlightToDesktop
         public static void InstallContextMenu()
         {
             RegistryKey key = Registry.ClassesRoot.CreateSubKey(@"DesktopBackground\Shell\RotateWallpaper", true);
-            key.SetValue(String.Empty, "Switch Wallpaper");
+            key.SetValue(String.Empty, "Switch wallpaper");
             key.SetValue("HideInSafeMode", String.Empty);
             key.SetValue("Position", "Bottom");
             key.SetValue("Icon", $"{Application.ExecutablePath},0");
